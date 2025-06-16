@@ -29,6 +29,11 @@ import {
   Camera,
 } from "lucide-react"
 import Link from "next/link"
+// import Logo from '/images/lustro.png'
+const backgroundImage = "/images/lustro.png"
+
+// Use the video path as a string instead of importing the file
+const backgroundVideo = "/videos/Background.mp4"
 
 interface OrderItem {
   id: string
@@ -75,17 +80,43 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-screen bg-gradient-to-r from-[#9d6c41] to-amber-700 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
-        <div className="relative container mx-auto px-4 h-full flex items-center">
+      <section className="relative h-screen text-white overflow-hidden">
+        {/* Background Video */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          poster="/placeholder.svg?height=1080&width=1920&text=Lustro+Lagos+Restaurant"
+        >
+          <source src={backgroundVideo} type="video/mp4" />
+          {/* <source src="/placeholder.svg?height=1080&width=1920&text=Restaurant+Video" type="video/webm" /> */}
+          {/* Fallback for browsers that don't support video */}
+          <div
+            className="absolute inset-0 w-full h-full"
+            style={{
+              backgroundImage: "url('/placeholder.svg?height=1080&width=1920&text=Lustro+Lagos+Restaurant+Interior')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+        </video>
+
+        {/* Video Overlay */}
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
+
+        {/* Content */}
+        <div className="relative container mx-auto px-4 h-full flex items-center z-10">
           <div
             className={`max-w-3xl transition-all duration-1000 ${
               isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-20"
             }`}
           >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 drop-shadow-lg">Welcome to Lustro Lagos</h1>
-            <p className="text-lg md:text-xl lg:text-2xl mb-8 drop-shadow-md max-w-2xl">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 drop-shadow-2xl">Welcome to Lustro Lagos</h1>
+            <p className="text-lg md:text-xl lg:text-2xl mb-8 drop-shadow-lg max-w-2xl">
               Experience exceptional dining and comfortable stays in the heart of Yaba, Lagos. Where culinary excellence
               meets hospitality perfection.
             </p>
@@ -111,6 +142,32 @@ export default function HomePage() {
               </Button>
             </div>
           </div>
+        </div>
+
+        {/* Video Controls (Optional - Hidden by default) */}
+        <div className="absolute bottom-4 right-4 z-20">
+          <button
+            className="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full backdrop-blur-sm transition-all duration-300 opacity-0 hover:opacity-100 group-hover:opacity-100"
+            onClick={(e) => {
+              const video = e.currentTarget.closest("section")?.querySelector("video")
+              if (video) {
+                if (video.paused) {
+                  video.play()
+                } else {
+                  video.pause()
+                }
+              }
+            }}
+            aria-label="Toggle video playback"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
         </div>
       </section>
 
@@ -149,8 +206,19 @@ export default function HomePage() {
                 isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
               }`}
             >
-              <div className="aspect-square bg-gradient-to-br from-[#9d6c41] to-amber-700 rounded-2xl flex items-center justify-center text-white font-semibold text-2xl shadow-2xl">
-                About Us Image
+              <div
+                className="aspect-square rounded-2xl shadow-2xl relative overflow-hidden"
+                style={{
+                  backgroundImage: `url(${backgroundImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 text-white font-semibold text-xl drop-shadow-lg">
+                  Our Story
+                </div>
               </div>
             </div>
           </div>
@@ -188,10 +256,18 @@ export default function HomePage() {
                 }`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="aspect-video bg-gradient-to-br from-[#9d6c41] to-amber-700 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-black/10 backdrop-blur-sm group-hover:bg-black/20 transition-all duration-300"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Camera className="w-12 h-12 text-white/80" />
+                <div
+                  className="aspect-video relative overflow-hidden"
+                  style={{
+                    backgroundImage: `url('/placeholder.svg?height=300&width=500&text=${item.title.replace(/\s+/g, "+")}')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent group-hover:from-black/60 transition-all duration-300"></div>
+                  <div className="absolute bottom-4 left-4 text-white font-semibold text-lg drop-shadow-lg">
+                    {item.title}
                   </div>
                 </div>
                 <CardHeader>
@@ -389,10 +465,24 @@ export default function HomePage() {
                 isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
               }`}
             >
-              <div className="aspect-square bg-gradient-to-br from-[#9d6c41] to-amber-700 rounded-2xl flex items-center justify-center text-white font-semibold text-2xl shadow-2xl">
-                Interactive Map
-                <br />
-                (Coming Soon)
+              <div
+                className="aspect-square rounded-2xl shadow-2xl relative overflow-hidden cursor-pointer hover:scale-105 transition-transform duration-300"
+                style={{
+                  backgroundImage: "url('/placeholder.svg?height=600&width=600&text=Lagos+Map+View')",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-6">
+                  <MapPin className="w-12 h-12 mb-4 text-white drop-shadow-lg" />
+                  <h3 className="font-bold text-xl mb-2 drop-shadow-lg">Our Location</h3>
+                  <p className="text-sm drop-shadow-md">Click to view interactive map</p>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse shadow-lg"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -414,7 +504,7 @@ export default function HomePage() {
             <p className="text-lg md:text-xl mb-8 drop-shadow-md max-w-3xl mx-auto">
               Whether you're craving exceptional cuisine or need comfortable accommodation, Lustro Lagos is here to
               exceed your expectations.
-            </p> q
+            </p>
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
               <Button
                 size="lg"
@@ -425,7 +515,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="bg-white/90 text-[#9d6c41] hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg backdrop-blur-sm text-lg px-8 py-4"
+                className="border-white/80 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300 backdrop-blur-sm text-lg px-8 py-4"
               >
                 <Link href="/reservations">Book Table</Link>
               </Button>

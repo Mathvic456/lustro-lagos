@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { useCartContext } from "@/components/cart-provider"
 import { PaymentForm } from "@/components/payment-form"
-import { Search, Filter, ShoppingCart, Star } from "lucide-react"
+import { Search, Filter, ShoppingCart, Star, Heart } from "lucide-react"
 import type { OrderItem } from "@/types"
+import Image from "next/image"
 
 export default function MenuPage() {
   const [selectedItem, setSelectedItem] = useState<OrderItem | null>(null)
@@ -19,6 +20,7 @@ export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [menuType, setMenuType] = useState("food")
+  const [favorites, setFavorites] = useState<string[]>([])
   const { addToCart } = useCartContext()
 
   useEffect(() => {
@@ -30,59 +32,190 @@ export default function MenuPage() {
     setIsPaymentOpen(true)
   }
 
+  const toggleFavorite = (itemId: string) => {
+    setFavorites((prev) => (prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]))
+  }
+
   const allMenuItems = {
     food: {
       starters: [
         {
           id: "st1",
           name: "Lustro Wings",
-          description: "Spicy buffalo wings with blue cheese dip",
+          description: "Spicy buffalo wings with blue cheese dip and celery sticks",
           price: 8500,
           popular: true,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "starters",
         },
-        { id: "st2", name: "Calamari Rings", description: "Crispy squid rings with marinara sauce", price: 12000 },
-        { id: "st3", name: "Beef Samosas", description: "Crispy pastry filled with spiced beef", price: 6500 },
-        { id: "st4", name: "Chicken Quesadilla", description: "Grilled tortilla with chicken and cheese", price: 9500 },
-        { id: "st5", name: "Prawn Cocktail", description: "Fresh prawns with cocktail sauce", price: 15000 },
+        {
+          id: "st2",
+          name: "Calamari Rings",
+          description: "Crispy squid rings with marinara sauce and lemon wedges",
+          price: 12000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "starters",
+        },
+        {
+          id: "st3",
+          name: "Beef Samosas",
+          description: "Crispy pastry filled with spiced beef and vegetables",
+          price: 6500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "starters",
+        },
+        {
+          id: "st4",
+          name: "Chicken Quesadilla",
+          description: "Grilled tortilla with chicken, cheese, and peppers",
+          price: 9500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "starters",
+        },
+        {
+          id: "st5",
+          name: "Prawn Cocktail",
+          description: "Fresh prawns with cocktail sauce and avocado",
+          price: 15000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "starters",
+        },
       ],
       mains: [
         {
           id: "mn1",
           name: "Lustro Jollof Rice",
-          description: "Signature jollof with premium ingredients",
+          description: "Signature jollof with premium ingredients, chicken, and plantain",
           price: 12000,
           popular: true,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "mains",
         },
-        { id: "mn2", name: "Creamy Alfredo Pasta", description: "Rich cream sauce with grilled chicken", price: 18500 },
-        { id: "mn3", name: "Ribeye Steak", description: "Premium ribeye with garlic butter", price: 28000 },
-        { id: "mn4", name: "Grilled Chicken", description: "Whole chicken marinated and grilled", price: 15000 },
-        { id: "mn5", name: "Seafood Linguine", description: "Mixed seafood in white wine sauce", price: 22000 },
-        { id: "mn6", name: "BBQ Ribs", description: "Slow-cooked ribs with BBQ sauce", price: 22000 },
-        { id: "mn7", name: "Fish Tacos", description: "Beer-battered fish with cabbage slaw", price: 8500 },
-        { id: "mn8", name: "Coconut Rice", description: "Fragrant rice cooked in coconut milk", price: 10500 },
+        {
+          id: "mn2",
+          name: "Creamy Alfredo Pasta",
+          description: "Rich cream sauce with grilled chicken and parmesan cheese",
+          price: 18500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "mains",
+        },
+        {
+          id: "mn3",
+          name: "Ribeye Steak",
+          description: "Premium ribeye with garlic butter and roasted vegetables",
+          price: 28000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "mains",
+        },
+        {
+          id: "mn4",
+          name: "Grilled Chicken",
+          description: "Whole chicken marinated and grilled with herbs and spices",
+          price: 15000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "mains",
+        },
+        {
+          id: "mn5",
+          name: "Seafood Linguine",
+          description: "Mixed seafood in white wine sauce with fresh herbs",
+          price: 22000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "mains",
+        },
+        {
+          id: "mn6",
+          name: "BBQ Ribs",
+          description: "Slow-cooked ribs with BBQ sauce and coleslaw",
+          price: 22000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "mains",
+        },
+        {
+          id: "mn7",
+          name: "Fish Tacos",
+          description: "Beer-battered fish with cabbage slaw and lime crema",
+          price: 8500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "mains",
+        },
+        {
+          id: "mn8",
+          name: "Coconut Rice",
+          description: "Fragrant rice cooked in coconut milk with vegetables",
+          price: 10500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "mains",
+        },
       ],
       platters: [
         {
           id: "pl1",
           name: "BFF Platter",
-          description: "Jollof rice, peppered chicken, gizzard & fries",
+          description: "Jollof rice, peppered chicken, gizzard & fries - perfect for sharing",
           price: 25000,
           popular: true,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "platters",
         },
-        { id: "pl2", name: "Lustro Mega Platter", description: "Mixed grill with sides for sharing", price: 35000 },
-        { id: "pl3", name: "Seafood Platter", description: "Grilled fish, prawns, and calamari", price: 28000 },
-        { id: "pl4", name: "Family Feast", description: "Complete meal for 4-6 people", price: 45000 },
+        {
+          id: "pl2",
+          name: "Lustro Mega Platter",
+          description: "Mixed grill with sides for sharing - serves 3-4 people",
+          price: 35000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "platters",
+        },
+        {
+          id: "pl3",
+          name: "Seafood Platter",
+          description: "Grilled fish, prawns, and calamari with garlic rice",
+          price: 28000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "platters",
+        },
+        {
+          id: "pl4",
+          name: "Family Feast",
+          description: "Complete meal for 4-6 people with variety of dishes",
+          price: 45000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "platters",
+        },
       ],
       sides: [
-        { id: "sd1", name: "French Fries", description: "Crispy golden fries", price: 4500 },
-        { id: "sd2", name: "Coleslaw", description: "Fresh cabbage and carrot salad", price: 3500 },
+        {
+          id: "sd1",
+          name: "French Fries",
+          description: "Crispy golden fries with sea salt",
+          price: 4500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "sides",
+        },
+        {
+          id: "sd2",
+          name: "Coleslaw",
+          description: "Fresh cabbage and carrot salad with creamy dressing",
+          price: 3500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "sides",
+        },
         {
           id: "sd3",
           name: "Grilled Vegetables",
-          description: "Seasonal vegetables grilled to perfection",
+          description: "Seasonal vegetables grilled to perfection with herbs",
           price: 5500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "sides",
         },
-        { id: "sd4", name: "Garlic Bread", description: "Toasted bread with garlic butter", price: 3000 },
+        {
+          id: "sd4",
+          name: "Garlic Bread",
+          description: "Toasted bread with garlic butter and parsley",
+          price: 3000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "sides",
+        },
       ],
     },
     drinks: {
@@ -90,29 +223,122 @@ export default function MenuPage() {
         {
           id: "ck1",
           name: "Lustro Signature",
-          description: "House special with premium spirits",
+          description: "House special with premium spirits, fresh fruits, and herbs",
           price: 8000,
           popular: true,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "cocktails",
         },
-        { id: "ck2", name: "Mojito", description: "Classic mint and lime cocktail", price: 6500 },
-        { id: "ck3", name: "Cosmopolitan", description: "Vodka, cranberry, and lime", price: 7000 },
-        { id: "ck4", name: "Old Fashioned", description: "Whiskey with bitters and orange", price: 7500 },
+        {
+          id: "ck2",
+          name: "Mojito",
+          description: "Classic mint and lime cocktail with white rum",
+          price: 6500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "cocktails",
+        },
+        {
+          id: "ck3",
+          name: "Cosmopolitan",
+          description: "Vodka, cranberry, and lime with orange liqueur",
+          price: 7000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "cocktails",
+        },
+        {
+          id: "ck4",
+          name: "Old Fashioned",
+          description: "Whiskey with bitters, orange, and sugar cube",
+          price: 7500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "cocktails",
+        },
       ],
       wines: [
-        { id: "wn1", name: "House White Wine", description: "Premium selection by the glass", price: 4500 },
-        { id: "wn2", name: "House Red Wine", description: "Full-bodied red wine", price: 4500 },
-        { id: "wn3", name: "Champagne", description: "Sparkling wine for celebrations", price: 12000 },
+        {
+          id: "wn1",
+          name: "House White Wine",
+          description: "Premium selection by the glass - crisp and refreshing",
+          price: 4500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "wines",
+        },
+        {
+          id: "wn2",
+          name: "House Red Wine",
+          description: "Full-bodied red wine with rich flavors",
+          price: 4500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "wines",
+        },
+        {
+          id: "wn3",
+          name: "Champagne",
+          description: "Sparkling wine for celebrations and special occasions",
+          price: 12000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "wines",
+        },
       ],
       beers: [
-        { id: "br1", name: "Local Beer", description: "Star, Gulder, or Trophy", price: 2500 },
-        { id: "br2", name: "Imported Beer", description: "Heineken, Corona, or Budweiser", price: 3500 },
-        { id: "br3", name: "Craft Beer", description: "Artisanal local craft beer", price: 4000 },
+        {
+          id: "br1",
+          name: "Local Beer",
+          description: "Star, Gulder, or Trophy - ice cold and refreshing",
+          price: 2500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "beers",
+        },
+        {
+          id: "br2",
+          name: "Imported Beer",
+          description: "Heineken, Corona, or Budweiser - premium selection",
+          price: 3500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "beers",
+        },
+        {
+          id: "br3",
+          name: "Craft Beer",
+          description: "Artisanal local craft beer with unique flavors",
+          price: 4000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "beers",
+        },
       ],
       nonAlcoholic: [
-        { id: "na1", name: "Fresh Juice", description: "Orange, pineapple, or watermelon", price: 3500 },
-        { id: "na2", name: "Smoothies", description: "Mixed fruit smoothies", price: 4500 },
-        { id: "na3", name: "Soft Drinks", description: "Coke, Pepsi, Sprite, Fanta", price: 2000 },
-        { id: "na4", name: "Coffee/Tea", description: "Freshly brewed coffee or tea", price: 2500 },
+        {
+          id: "na1",
+          name: "Fresh Juice",
+          description: "Orange, pineapple, or watermelon - freshly squeezed",
+          price: 3500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "nonAlcoholic",
+        },
+        {
+          id: "na2",
+          name: "Smoothies",
+          description: "Mixed fruit smoothies with yogurt and honey",
+          price: 4500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "nonAlcoholic",
+        },
+        {
+          id: "na3",
+          name: "Soft Drinks",
+          description: "Coke, Pepsi, Sprite, Fanta - ice cold",
+          price: 2000,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "nonAlcoholic",
+        },
+        {
+          id: "na4",
+          name: "Coffee/Tea",
+          description: "Freshly brewed coffee or premium tea selection",
+          price: 2500,
+          image: "/placeholder.svg?height=200&width=300",
+          category: "nonAlcoholic",
+        },
       ],
     },
   }
@@ -271,7 +497,7 @@ export default function MenuPage() {
               <Star className="w-5 h-5 text-[#9d6c41] mr-2" />
               <h2 className="text-xl md:text-2xl font-bold text-gray-900">Popular Items</h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {popularItems.map((item, index) => (
                 <MenuItemCard
                   key={item.id}
@@ -280,6 +506,8 @@ export default function MenuPage() {
                   isVisible={isVisible}
                   onAddToCart={() => addToCart({ ...item })}
                   onOrderNow={() => handleOrderNow({ ...item })}
+                  onToggleFavorite={() => toggleFavorite(item.id)}
+                  isFavorite={favorites.includes(item.id)}
                   isPopular={true}
                 />
               ))}
@@ -311,7 +539,7 @@ export default function MenuPage() {
               <p className="text-gray-500">Try adjusting your search or filter criteria</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredItems.map((item, index) => (
                 <MenuItemCard
                   key={item.id}
@@ -320,6 +548,8 @@ export default function MenuPage() {
                   isVisible={isVisible}
                   onAddToCart={() => addToCart({ ...item })}
                   onOrderNow={() => handleOrderNow({ ...item })}
+                  onToggleFavorite={() => toggleFavorite(item.id)}
+                  isFavorite={favorites.includes(item.id)}
                 />
               ))}
             </div>
@@ -330,13 +560,15 @@ export default function MenuPage() {
   )
 }
 
-// Separate component for menu item cards
+// Enhanced menu item card component with images
 function MenuItemCard({
   item,
   index,
   isVisible,
   onAddToCart,
   onOrderNow,
+  onToggleFavorite,
+  isFavorite,
   isPopular = false,
 }: {
   item: any
@@ -344,39 +576,72 @@ function MenuItemCard({
   isVisible: boolean
   onAddToCart: () => void
   onOrderNow: () => void
+  onToggleFavorite: () => void
+  isFavorite: boolean
   isPopular?: boolean
 }) {
   return (
     <Card
-      className={`group hover:shadow-xl transition-all duration-500 backdrop-blur-md bg-white/90 border border-white/20 hover:scale-[1.02] hover:bg-white ${
+      className={`group hover:shadow-xl transition-all duration-500 backdrop-blur-md bg-white/90 border border-white/20 hover:scale-[1.02] hover:bg-white overflow-hidden ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       }`}
       style={{ animationDelay: `${index * 50}ms` }}
     >
-      <CardHeader className="pb-3 relative">
-        {isPopular && (
-          <div className="absolute -top-2 -right-2 bg-[#9d6c41] text-white text-xs px-2 py-1 rounded-full flex items-center">
-            <Star className="w-3 h-3 mr-1" />
-            Popular
+      {/* Image Section */}
+      <div className="relative h-48 overflow-hidden">
+        <Image
+          src={item.image || "/placeholder.svg"}
+          alt={item.name}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+
+        {/* Overlay with badges */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+        {/* Top badges */}
+        <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+          <div className="flex gap-2">
+            {isPopular && (
+              <Badge className="bg-[#9d6c41] text-white text-xs px-2 py-1 flex items-center">
+                <Star className="w-3 h-3 mr-1" />
+                Popular
+              </Badge>
+            )}
           </div>
-        )}
-        <div className="flex justify-between items-start gap-3">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-base font-semibold leading-tight mb-1 group-hover:text-[#9d6c41] transition-colors">
-              {item.name}
-            </CardTitle>
-            <CardDescription className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-              {item.description}
-            </CardDescription>
-          </div>
+
+          {/* Favorite button */}
+          <button
+            onClick={onToggleFavorite}
+            className={`p-2 rounded-full backdrop-blur-sm transition-all duration-300 ${
+              isFavorite ? "bg-red-500 text-white" : "bg-white/80 text-gray-600 hover:bg-white hover:text-red-500"
+            }`}
+          >
+            <Heart className={`w-4 h-4 ${isFavorite ? "fill-current" : ""}`} />
+          </button>
+        </div>
+
+        {/* Price badge */}
+        <div className="absolute bottom-3 right-3">
           <Badge
             style={{ backgroundColor: "#9d6c41" }}
-            className="text-white shadow-lg backdrop-blur-sm text-sm px-2 py-1 whitespace-nowrap flex-shrink-0"
+            className="text-white shadow-lg backdrop-blur-sm text-sm px-3 py-1"
           >
             ₦{item.price.toLocaleString()}
           </Badge>
         </div>
+      </div>
+
+      {/* Content Section */}
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg font-semibold leading-tight mb-2 group-hover:text-[#9d6c41] transition-colors">
+          {item.name}
+        </CardTitle>
+        <CardDescription className="text-sm text-gray-600 leading-relaxed line-clamp-2">
+          {item.description}
+        </CardDescription>
       </CardHeader>
+
       <CardContent className="pt-0">
         <div className="flex gap-2">
           <Button

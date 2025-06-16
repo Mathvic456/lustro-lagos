@@ -11,7 +11,6 @@ import { CartComponent } from "./cart"
 import { PaymentForm } from "./payment-form"
 import type { CartItem } from "@/types"
 import Image from "next/image"
-import Lustro from '../public/images/lustro.png'
 
 interface NavigationProps {
   cart: CartItem[]
@@ -46,6 +45,7 @@ export function Navigation({ cart, updateCartItemQuantity, removeFromCart, clear
   const navigationItems = [
     { name: "Home", href: "/" },
     { name: "Menu", href: "/menu" },
+    { name: "Events", href: "/events" },
     { name: "Shortlets", href: "/shortlets" },
     { name: "Gallery", href: "/gallery" },
     { name: "Reservations", href: "/reservations" },
@@ -66,7 +66,7 @@ export function Navigation({ cart, updateCartItemQuantity, removeFromCart, clear
               >
                 <div className="relative w-12 h-8 flex-shrink-0">
                   <Image
-                    src={Lustro}
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lustro.jpg-NtxtycpFOdnsjCjbtsbSmFAsUdR3Ic.jpeg"
                     alt="Lustro Lagos Logo"
                     fill
                     className="object-contain"
